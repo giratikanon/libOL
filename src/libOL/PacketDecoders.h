@@ -477,19 +477,23 @@ namespace libol {
         static std::string name() { return "SetHealth"; }
 
         static Value decode(Block& block) {
+            Object data = Object();
             if(block.size == 0x2) { // TODO: understand this
-                throw ParseException("SetHealth: size is only 2 bytes");
+                // throw ParseException("SetHealth: size is only 2 bytes");
+                auto stream = block.createStream();
+                stream.ignore(2);
+                data.setv("maxHealth", 0);
+            } else {
+
+                REQUIRE(block.size == 0xa);
+
+                auto stream = block.createStream();
+
+                stream.ignore(2);
+                data.setv("maxHealth", stream.read<float>());
+                data.setv("currentHealth", stream.read<float>());
             }
 
-            REQUIRE(block.size == 0xa);
-
-            Object data = Object();
-
-            auto stream = block.createStream();
-
-            stream.ignore(2);
-            data.setv("maxHealth", stream.read<float>());
-            data.setv("currentHealth", stream.read<float>());
 
             return Value::create(data);
         }

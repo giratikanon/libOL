@@ -64,7 +64,7 @@ namespace libol {
             Stream(Block& block, size_t pos = 0) :
                 block(block),
                 pos(pos)
-            {} 
+            {}
 
             size_t tellg() { return pos; }
             void seekg(size_t offset) { pos = offset; }
